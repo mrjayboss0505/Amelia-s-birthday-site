@@ -1,40 +1,3 @@
-          // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-      apiKey: "AIzaSyAixyaoe_Wyoa0fNHikwUvpVE6xVFfvjCI",
-      authDomain: "birthday-wishes-37d2e.firebaseapp.com",
-      databaseURL: "https://birthday-wishes-37d2e-default-rtdb.firebaseio.com",
-      projectId: "birthday-wishes-37d2e",
-      storageBucket: "birthday-wishes-37d2e.firebasestorage.app",
-      messagingSenderId: "1001968657450",
-      appId: "1:1001968657450:web:76a0e08993e76597314f53",
-      measurementId: "G-JDCRS6G73C"
-    };
-
-        // Initialize Firebase
-       const app = initializeApp(firebaseConfig);
-       const analytics = getAnalytics(app);
-
-       db.ref("wishes").on("value", (snapshot) => {
-         const data = snapshot.val();
-         if (!data) return;
-
-         wishes.length = 0; // Clear array
-
-         for (let key in data) {
-           wishes.push(data[key]);
-         }
-
-         currentWishIndex = wishes.length - 1;
-         displayCurrentWish();
-       });
-
 
         // Mobile nav toggle
         document.getElementById("menuToggle").addEventListener("click", function () {
@@ -89,36 +52,55 @@
             displayCurrentWish();
         });
 
-        // Form Submission
-        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('name').value.trim();
-            const message = document.getElementById('message').value.trim();
-            
-            // Validate input
-            if (!name || !message) {
-                alert('Please provide both your name and a message.');
-                return;
-            }
-            
-            // Add new wish to the array
-            db.ref("wishes").push({
-               author: name,
-               message: message
-            });
-            
-            // Display the newly added wish
-            currentWishIndex = wishes.length - 1;
-            displayCurrentWish();
-            
-            // Show confirmation message
-            alert('Thank you for your RSVP, ' + name + '! Your message has been added to the Birthday Wishes.');
-            
-            // Scroll to wishes section to show the user their message
-            document.getElementById('wishes').scrollIntoView({behavior: 'smooth'});
-            
-            // Reset form
-            this.reset();
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
+        import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-database.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyAixyaoe_Wyoa0fNHikwUvpVE6xVFfvjCI",
+          authdomain: "birthday-wishes-37d2e.firebaseapp.com",
+          databaseURL: "https://birthday-wishes-37d2e-default-rtdb.firebaseio.com",
+          projectId: "birthday-wishes-37d2e",
+          storageBucket: "birthday-wishes-37d2e.appspot.com",
+          messagingSenderId: "1001968657450",
+          appId: "1:1001968657450:web:76a0e08993e76597314f53",
+          measurementId: "G-JDCRS6G73C"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Load existing wishes
+        onValue(ref(db, "wishes"), (snapshot) => {
+          const data = snapshot.val();
+          if (!data) return;
+
+          wishes.length = 0;
+          for (let key in data) {
+            wishes.push(data[key]);
+          }
+
+          currentWishIndex = wishes.length - 1;
+          displayCurrentWish();
+        });
+
+        // Form Submission - save to Firebase
+        document.getElementById('rsvpForm').addEventListener('submit', function (e) {
+          e.preventDefault();
+          const name = document.getElementById('name').value.trim();
+          const message = document.getElementById('message').value.trim();
+
+          if (!name || !message) {
+            alert("Please provide both your name and a message.");
+            return;
+          }
+
+          push(ref(db, "wishes"), {
+            author: name,
+            message: message
+          });
+
+          alert(`Thank you for your RSVP, ${name}!`);
+          this.reset();
         });
 
         (function () {
