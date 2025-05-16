@@ -1,3 +1,5 @@
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
+        import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-database.js";
 
         // Mobile nav toggle
         document.getElementById("menuToggle").addEventListener("click", function () {
@@ -52,12 +54,11 @@
             displayCurrentWish();
         });
 
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
-        import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-database.js";
+        // fire base configuration 
 
         const firebaseConfig = {
           apiKey: "AIzaSyAixyaoe_Wyoa0fNHikwUvpVE6xVFfvjCI",
-          authdomain: "birthday-wishes-37d2e.firebaseapp.com",
+          authDomain: "birthday-wishes-37d2e.firebaseapp.com",
           databaseURL: "https://birthday-wishes-37d2e-default-rtdb.firebaseio.com",
           projectId: "birthday-wishes-37d2e",
           storageBucket: "birthday-wishes-37d2e.appspot.com",
